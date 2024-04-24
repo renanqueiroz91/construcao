@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'src/style.css' %}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastrar Material</title>
+{% endblock %}
+
+{% block content %}
+<style>
+    html {
+      background-image: url('{% static 'img/bg-menu3.jpeg' %}');
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100%;
+      overflow: hidden;
+    }
+</style>
+<body id="bg">
+    <h1>Cadastrar Material</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_construcao">Construção:</label>
+        <select id="id_construcao" name="construcao" required>
+            <option value="{{ construcao.id }}" selected>{{ construcao.nome }}</option>
+        </select>
+        <br>
+        <label for="id_material">Nome do Material:</label>
+        <input type="text" id="id_material" name="material" required>
+        <br>
+        <label for="id_tipo_material">Tipo de Material:</label>
+        <select id="id_tipo_material" name="tipo_material" required>
+            <option value="">Selecione um tipo de material</option>
+            {% for tipo, label in tipos_materiais %}
+                <option value="{{ tipo }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="id_quantidade">Quantidade:</label>
+        <input type="number" id="id_quantidade" name="quantidade" min="0" required>
+        <br>
+        <button type="submit">Cadastrar</button>
+    </form>
+</body>
+{% endblock %}
+

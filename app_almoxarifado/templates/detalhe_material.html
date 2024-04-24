@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'src/style.css' %}">
+<style>
+    /* Estilos adicionais */
+    .container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .input-field {
+        width: 150px;
+        margin-right: 10px;
+    }
+
+    .output-button,
+    .input-button {
+        padding: 10px;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+        width: 100px;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<body id="bg">
+    <h1>Detalhes do Material</h1>
+    <p>Obra: {{ material.construcao }}</p>
+    <p>Material: {{ material.material }}</p>
+    <p>Tipo: {{ material.tipo_material }}</p>
+    <p id="quantidade">Quantidade: {{ material.quantidade }}</p>
+
+    <!-- Formulário para saída de material -->
+    <form method="post" action="{% url 'app_almoxarifado:atualizar_quantidade' material_id=material.id %}">
+        {% csrf_token %}
+        <div class="container">
+            <input type="number" name="saidaInput" class="input-field" min="1" placeholder="Saída">
+            <button type="submit" name="saida" class="output-button" style="background-color: #DC2626;">Saída</button>
+        </div>
+    </form>
+
+    <br> 
+
+    <!-- Formulário para entrada de material -->
+    <form method="post" action="{% url 'app_almoxarifado:atualizar_quantidade' material_id=material.id %}">
+        {% csrf_token %}
+        <div class="container">
+            <input type="number" name="entradaInput" class="input-field" min="1" placeholder="Entrada">
+            <button type="submit" name="entrada" class="input-button" style="background-color: #10B981;">Entrada</button>
+        </div>
+    </form>
+</body>
+{% endblock %}

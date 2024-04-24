@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt">
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="{% static 'src/style.css' %}">
+  <link rel="stylesheet" type="text/css" media="screen" href="{% static 'src/bg.css' %}">
+  <!-- Favicon -->
+	{% comment %} <link rel="shortcut icon" href="{% static 'img/tickerfav2.png' %}"> {% endcomment %}
+{% endblock %}
+
+{% block content %}
+<style>
+  html {
+    background-image: url('{% static 'img/predios.jpeg' %}');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    overflow: hidden;
+  }
+</style>
+<body id="bg">
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <section class="text-gray-600 body-font overflow-hidden">
+    <div class="container px-5 py-24 mx-auto">
+      <div class="flex items-center justify-center h-screen">
+        <div class="p-4 xl:w-2/5 md:w-1/2 w-full ">
+          <span>&nbsp</span>
+          <span>&nbsp</span>
+          <span>&nbsp</span>
+          <span>&nbsp</span>
+          <div class="bg-transparent rounded-lg shadow-lg p-8 ">
+
+
+            <form role="form" method="POST" action="{% url 'login:logar' %}">
+              {% csrf_token %}
+              <div class="relative mb-4 shadow">
+                <label for="login" class="my-font leading-7 text-sm text-white">Usuário</label>
+                <input type="text" id="login" name="login" class="w-full bg-green-50 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+              </div>
+
+              <div class="relative mb-4 shadow">
+                <label for="password" class="my-font leading-7 text-sm text-white">Senha</label>
+                <input type="password" id="password" name="senha" class="w-full bg-green-50 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+              </div>
+
+              <div class="text-red-500">
+                {% if messages %}
+                  {% for message in messages %}
+                    {{ message }}
+                  {% endfor %}
+                {% endif %}
+              </div>
+
+              <button type="submit" class="my-font text-green-600 border-2 border-green-600 py-1 px-14 w-full focus:outline-none hover:bg-yellow-100 hover:text-black hover:yellow-400 rounded text-lg bg-green-50">Login</button>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+{% endblock content %}

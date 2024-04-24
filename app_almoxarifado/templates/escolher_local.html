@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'src/style.css' %}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escolher Local</title>
+{% endblock %}
+
+{% block content %}
+<style>
+    html {
+      background-image: url('{% static 'img/bg-menu3.jpeg' %}');
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .delete-button {
+        border: 1px solid black;
+        color: red-800;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        padding: 12px 16px;
+        z-index: 1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+</style>
+<body id="bg">
+
+    <h1>Escolher Local</h1>
+    
+    {% if locais %}
+        <ul>
+            {% for local in locais %}
+                <li>
+                    {{ local.nome }}
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <button id="dropdownButtonUser1" data-dropdown-toggle="dropdownUser1_{{local.id}}" class="my-font text-red-900 hover:text-red-600" type="button">Deletar</button>
+                        <div id="dropdownUser1_{{local.id}}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-500">
+                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownButtonUser1">
+                            <li>
+                                <a class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tem Certeza?</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'app_almoxarifado:deletar_local' local.id %}" class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sim</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'app_almoxarifado:escolher_local' %}" class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Não</a>
+                            </li>
+                            </ul>
+                        </div>
+                    </td>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nenhum Local cadastrado. Por favor, cadastre algum local para visualizar os locais.</p>
+    {% endif %}
+
+    <script>
+        function excluirLocal(localId) {
+            var dropdownContent = document.getElementById(`dropdown-content-${localId}`);
+            dropdownContent.style.display = "block";
+        }
+
+        function excluirLocalConfirmado(localId) {
+            if (confirm('Tem certeza que deseja excluir este local?')) {
+                fetch(`/app_almoxarifado/deletar_local/${localId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Local excluído com sucesso.');
+                        // Recarregar a página após a exclusão
+                        location.reload();
+                    } else {
+                        console.error('Erro ao excluir local:', response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao excluir local:', error);
+                });
+            }
+        }
+    </script>
+</body>
+{% endblock %}
+<p>Nenhum Local cadastrado. Por favor, cadastre algum local para visualizar os locais.</p>

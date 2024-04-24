@@ -1,0 +1,80 @@
+<header class="text-gray-600 body-font">
+  <div class="mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center bg-transparent text-black">
+      <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+          
+      </a>
+      <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center bg-transparent">
+        <a href="{% url 'app_almoxarifado:menu' %}" class="my-font text-black bg-transparent hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-8 py-5 text-center inline-flex items-center dark:bg-transparent dark:hover:bg-transparent dark:focus:ring-blue-800">Início</a>
+        <span class="mx-4"></span> <!-- Espaçamento entre os elementos -->
+        <button id="dropdownButton1" data-dropdown-toggle="dropdown1" class="my-font text-black bg-transparent hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-8 py-5 text-center inline-flex items-center dark:bg-transparent dark:hover:bg-transparent dark:focus:ring-blue-800" type="button">Almoxarifado</button>
+        <span class="mx-4"></span> <!-- Espaçamento entre os elementos -->
+        <!-- Dropdown menu -->
+        <div id="dropdown1" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-white border-l-4 border-r-4 border-b-4 border-blue-800 absolute">
+          <ul class="py-2 text-sm text-gray-700 dark:text-blue-400" aria-labelledby="dropdownButton1">
+              <li>
+                <a href="{% url 'app_almoxarifado:cadastrar_local' %}" class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-black border-b-2 border-gray-100">Cadastrar Local</a>
+            </li>
+            <li>
+              <a href="{% url 'app_almoxarifado:escolher_local' %}" class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-black border-b-2 border-gray-100">Locais</a>
+            </li>
+             <li>
+              <a href="{% url 'app_almoxarifado:movimentacoes_estoque' %}" class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-black border-b-2 border-gray-100">Movimentação</a>
+            </li> 
+            {% if construcao.id %}
+              <li>
+                <a href="{% url 'app_almoxarifado:cadastrar_material' construcao_id=construcao.id %}" class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-black border-b-2 border-gray-100">Cadastrar Materiais</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+          
+
+        <button id="dropdownButton4" data-dropdown-toggle="dropdown4" class="my-font text-black bg-transparent hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-8 py-5 text-center inline-flex items-center dark:bg-transparent dark:hover:bg-transparent dark:focus:ring-blue-800" type="button">Financeiro </button>
+        <span class="mx-4"></span> <!-- Espaçamento entre os elementos -->
+        <!-- Dropdown menu -->
+        <div id="dropdown4" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-white border-l-4 border-r-4 border-b-4 border-blue-800 absolute">
+          <ul class="py-2 text-sm text-gray-700 dark:text-blue-400" aria-labelledby="dropdownButton4">
+            {% if request.user.is_authenticated %}
+              
+            <li>
+              <a  class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-black border-b-2 border-gray-100">Custos</a>
+            </li>
+            <li>
+              <a  class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-black border-b-2 border-gray-100">Despesas</a>
+            </li>
+            <li>
+              <a  class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-black border-b-2 border-gray-100">Investimentos</a>
+            </li>
+            <li>
+              <a  class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-black border-b-2 border-gray-100">Perdas</a>
+            </li>
+            <li>
+              <a  class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-black border-b-2 border-gray-100">Receitas</a>
+            </li>
+            <li>
+              <a  class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-black border-b-2 border-gray-100">Balanço</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+      {% if request.user.is_authenticated %}
+        Olá,&nbsp <span style="color: #F59E0B;">{{ request.user.nome }}</span>
+        <a  href="{% url 'login:log_out' %}" class="my-font ml-3 inline-flex items-center bg-transparent border-0 py-1 px-3 focus:outline-none hover:text-red-950 rounded text-base text-red-500 mt-4 md:mt-0">
+          Sair
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      {% else %}
+      <a href="{% url 'login:login' %}" class="my-font inline-flex items-center bg-green-200 border-0 py-1 px-3 focus:outline-none hover:bg-green-500 rounded text-base mt-4 md:mt-0">
+        Login
+        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+          <path d="M5 12h14M12 5l7 7-7 7"></path>
+        </svg>
+      </a>
+      {% endif %}
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+      </svg>
+    </div>
+  </header>

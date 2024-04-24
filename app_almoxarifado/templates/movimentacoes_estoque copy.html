@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'src/style.css' %}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movimentações de Estoque</title>
+{% endblock %}
+
+{% block content %}
+<style>
+    html {
+        background-image: url('{% static 'img/bg-menu3.jpeg' %}');
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .header-container h1 {
+        color: #000000; /* Cor blue800 */
+        margin: 0;
+    }
+
+    /* Estilo para o botão Visualizar Movimentações */
+    form {
+        margin-top: 20px;
+    }
+
+    form button {
+        background-color: #333; /* Cor cinza escuro */
+        color: #fff; /* Cor branca */
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    form button:hover {
+        background-color: #555; /* Cor cinza mais escura no hover */
+    }
+
+    /* Estilo para a mensagem de "Não existem registros para esta data" */
+    p {
+        margin-top: 20px;
+        color: #fff; /* Cor branca */
+        font-size: 18px;
+    }
+</style>
+<body id="bg">
+    <h1>Selecione uma data</h1>
+    <form method="POST" action="{% url 'app_almoxarifado:movimentacoes_estoque' %}">
+        {% csrf_token %}
+        <input type="date" name="data" max="{% now 'Y-m-d' %}">
+        <button type="submit">Visualizar Movimentações</button>
+    </form>
+
+    {% if movimentacoes %}
+        <h2>Movimentações de Estoque para {{ data_selecionada }}</h2>
+        {% for construcao, movimentacoes_construcao in movimentacoes.items %}
+            <h3>{{ construcao }}</h3>
+            <ul>
+                {% for movimentacao in movimentacoes_construcao %}
+                    <li>{{ movimentacao.tipo }} - {{ movimentacao.material }} - {{ movimentacao.quantidade }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% else %}
+        {% if data_selecionada %}
+            <p>Não existem registros para esta data.</p>
+        {% endif %}
+    {% endif %}
+</body>
+{% endblock %}

@@ -1,0 +1,24 @@
+<!-- teste.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'src/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<body id="bg" style="background-color: lightgray;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file">
+        <button type="submit">Enviar</button>
+    </form>
+
+    <!-- Exibir a tabela HTML -->
+    {% if table_html %}
+    <div>
+        {{ table_html|safe }}
+    </div>
+    {% endif %}
+</body>
+{% endblock %}

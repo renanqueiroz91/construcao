@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'src/style.css' %}">
+<style>
+    /* Estilos adicionais */
+    .container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .input-field {
+        width: 150px;
+        margin-right: 10px;
+    }
+
+    .output-button,
+    .input-button {
+        padding: 10px;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+        width: 100px;
+    }
+
+    .output-button {
+        background-color: #DC2626; /* Red 600 */
+    }
+
+    .input-button {
+        background-color: #10B981; /* Green 400 */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<body id="bg">
+    <h1>Detalhes do Material</h1>
+    <p>Obra: {{ material.construcao }}</p>
+    <p>Material: {{ material.material }}</p>
+    <p>Tipo: {{ material.tipo_material }}</p>
+    <p id="quantidade">Quantidade: {{ material.quantidade }}</p>
+
+    <!-- Campo para saída de material -->
+    <div class="container">
+        <input type="number" id="saidaInput" class="input-field" min="1" placeholder="Saída">
+        <button class="output-button" style="background-color: #DC2626;">Saída</button>
+    </div>
+
+    <br> <!-- Adicionei uma quebra de linha para aumentar a distância entre as funções -->
+
+    <!-- Campo para entrada de material -->
+    <div class="container">
+        <input type="number" id="entradaInput" class="input-field" min="1" placeholder="Entrada">
+        <button class="input-button" style="background-color: #10B981;">Entrada</button>
+    </div>
+</body>
+{% endblock %}

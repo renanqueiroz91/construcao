@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'src/style.css' %}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estoque de {{ construcao.nome }}</title>
+{% endblock %}
+
+{% block content %}
+<style>
+    html {
+        background-image: url('{% static 'img/bg-menu3.jpeg' %}');
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .header-container h1 {
+        color: #000000 /* Cor blue800 */
+        margin: 0;
+    }
+
+    .add-material-button {
+        margin-top: 20px;
+    }
+
+    .add-material-button button {
+        border: 1px solid #4a5568;
+        color: #4a5568;
+        background-color: #fff;
+        padding: 10px 20px;
+        transition: background-color 0.3s;
+    }
+
+    .add-material-button button:hover {
+        background-color: #2f855a;
+        color: #fff;
+    }
+
+    .export-button {
+        margin-top: 20px;
+    }
+
+    .export-button button {
+        border: 1px solid #EF4444;
+        color: #ffffff;
+        background-color: #EF4444;
+        padding: 10px 20px;
+        transition: background-color 0.3s;
+    }
+
+    .export-button button:hover {
+        background-color: #DC2626;
+    }
+    
+    .material-item {
+        margin-bottom: 10px;
+    }
+
+    .delete-material-button {
+        float: right;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .delete-material-button button {
+        background-color: #EF4444;
+    }
+
+    .detail-material-button {
+        float: left;
+        margin-right: 10px;
+    }
+
+    .detail-material-button button {
+        background-color: #3B82F6; /* Cor blue400 */
+        color: #ffffff;
+    }
+
+    .material-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .material-table th, .material-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .material-table th {
+        background-color: #f2f2f2;
+    }
+
+    .table-container {
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    .search-container {
+        margin-bottom: 20px;
+    }
+
+</style>
+<body id="bg">
+    <div class="header-container">
+        <h1>Estoque de <span style="font-weight: bold;">{{ construcao.nome }}</span></h1>
+        <!-- Adicionar formulário para adicionar lista de materiais -->
+        <div class="add-material-button">
+            <form action="{% url 'app_almoxarifado:upload_lista_materiais' construcao_id=construcao.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="file" accept=".xlsx, .xls">
+                <!-- Adicione um campo oculto para enviar o ID da construção -->
+                <input type="hidden" name="construcao_id" value="{{ construcao.id }}">
+                <button type="submit">Registrar Lista de Materiais</button>
+            </form>
+        </div>
+        <!-- Adicionar formulário para adicionar material -->
+        <div class="add-material-button">
+            <form action="{% url 'app_almoxarifado:cadastrar_material' construcao_id=construcao.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Adicionar Material</button>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <!-- Adicionando o campo de filtro por nome de material -->
+    <div class="search-container">
+        <label for="searchInput">Buscar Material:</label>
+        <input type="text" id="searchInput" onkeyup="filterMaterials()" placeholder="Busque o material">
+    </div>
+    <!-- Adicionar botão para exportar lista de materiais -->
+    
+    <div class="export-button">
+        <form action="{% url 'app_almoxarifado:exportar_lista_materiais' construcao_id=construcao.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Exportar Lista de Materiais</button>
+        </form>
+    </div>
+    <br/>
+    <div class="table-container">
+        <table class="material-table">
+            <thead>
+                <tr>
+                    <th>Nome Material</th>
+                    <th>Tipo</th>
+                    <th>Quantidade</th>
+                    <th></th> <!-- Coluna extra para o botão de detalhes -->
+                    <th></th> <!-- Coluna extra para o botão de deletar -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for material in materiais %}
+                    <tr class="material-item">
+                        <td>{{ material.material }}</td> <!-- Aqui exibimos apenas o nome do material -->
+                        <td>{{ material.tipo_material }}</td>
+                        <td>{{ material.quantidade }}</td>
+                        <td>
+                            <div class="detail-material-button">
+                                <form action="{% url 'app_almoxarifado:detalhe_material' material.id %}" method="get">
+                                    <button type="submit">Detalhes</button>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="delete-material-button">
+                                <button id="dropdownButtonUser{{ forloop.counter }}" data-dropdown-toggle="dropdownUser{{ forloop.counter }}" class="w-full mt-3 text-white bg-red-500 border-0 py-1 px-1 focus:outline-none hover:bg-red-600 rounded">
+                                    Excluir
+                                </button>
+                                <div id="dropdownUser{{ forloop.counter }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-500">
+                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownButtonUser{{ forloop.counter }}">
+                                        <li>
+                                            <a class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tem Certeza?</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'app_almoxarifado:deletar_material' material.id %}" class="my-font block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sim</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+<script>
+    // Função para filtrar os materiais com base no texto digitado no campo de busca
+    function filterMaterials() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementsByClassName("material-table")[0];
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0]; // Primeira coluna contém o nome do material
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}

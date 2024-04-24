@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'src/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<style>
+  html {
+    background-image: url('{% static 'img/bg-menu3.jpeg' %}');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    overflow: hidden;
+  }
+  #almoxarifado {
+    font-size: 3rem; /* Tamanho grande */
+    font-weight: bold; /* Negrito */
+    color: black; /* Cor preta */
+    margin-bottom: 1rem; /* Espaçamento abaixo */
+  }
+  #locais {
+    font-size: 1.5rem; /* Tamanho médio */
+    color: black; /* Cor preta */
+    margin-bottom: 2rem; /* Espaçamento abaixo */
+  }
+</style>
+<body id="bg">
+  <section class="text-gray-600 body-font">
+    <div class="container px-5 py-24 mx-auto">
+      <div class="flex flex-wrap w-full mb-20 flex-col items-center text-center">
+        <h2 id="almoxarifado">ALMOXARIFADO</h2>
+        <h3 id="locais">Locais:</h3> <!-- Adição: Locais -->
+        <ul>
+          {% for construcao in construcoes %}
+            <li><a href="{% url 'app_almoxarifado:visualizar_estoque' construcao.id %}">{{ construcao.nome }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </section>
+</body>
+{% endblock %}

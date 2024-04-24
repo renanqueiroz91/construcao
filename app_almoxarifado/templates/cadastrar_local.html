@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'src/style.css' %}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastrar Local</title>
+{% endblock %}
+
+{% block content %}
+<style>
+    html {
+      background-image: url('{% static 'img/bg-menu3.jpeg' %}');
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100%;
+      overflow: hidden;
+    }
+</style>
+<body id= "bg">
+    <h1>Cadastrar Local</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="nome" style="color: blue-100;">Nome do Local:</label>
+        <input type="text" id="nome" name="nome" style="color: blue-100; background-color: lightgray;" required>
+        <button type="submit" class="text-black border-2 border-black focus:outline-none hover:bg-gray-700 hover:text-green-500 hover:yellow-400 rounded text-lg bg-white">
+            Cadastrar
+        </button>
+    </form>
+</body>
+{% endblock %}
